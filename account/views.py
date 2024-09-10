@@ -24,8 +24,8 @@ class UserRegister(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
-            password = serializer.validated_data['password']
-            user = serializer.save(commit=False)
+            password = serializer.validated_data.get('password')
+            user = serializer.save()
             user.set_password(password)
             user.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -42,8 +42,8 @@ class Login(APIView):
             email = serializer.validated_data['email']
             user = authenticate(username=email,password=password)
             if user is not None:
-                return True
-            return False
+                return Response("User is authenticated", status=status.HTTP_200_OK)
+            return Response("User is not authenticated", status=status.HTTP_401_UNAUTHORIZED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

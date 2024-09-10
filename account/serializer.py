@@ -19,9 +19,9 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["name","email","password","phone_number","username"]
 
-    def validate(self, attrs):
-        email = attrs.get("email")
+    def validate_email(self, email):
         return normalize_email(email)
+
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField()
