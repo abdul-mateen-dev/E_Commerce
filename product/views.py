@@ -28,3 +28,11 @@ class ProductsViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
         pass
 
+
+class ProductDetailByCategoryViewSet(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def list(self, request, *args, **kwargs):
+
+        pass

@@ -1,13 +1,9 @@
-from rest_framework.serializers import ModelSerializer
 
 
 from.brands import Brand
 from.category import Category
 from.product import Product
+from .rating import  Rating
+from .specifications import  Specifications
 
-
-class ProductSerializer(ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ''
 
