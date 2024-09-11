@@ -10,3 +10,8 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Brand'
+        unique_together = (('name', 'category'),)
+        verbose_name_plural = 'Brands'
