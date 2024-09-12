@@ -36,3 +36,7 @@ class ProductDetailByCategoryViewSet(ModelViewSet):
     def list(self, request, *args, **kwargs):
 
         pass
+
+class ProductDetailViewSet(ModelViewSet):
+    queryset = ProductSpecification.objects.all()
+    serializer_class = ProductSpecificationSerializer

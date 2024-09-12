@@ -1,5 +1,5 @@
 from django.contrib import admin
 
-from .models import Specifications
+from .models import ProductSpecification
 
-admin.site.register(Specifications)
+admin.site.register(ProductSpecification)

@@ -19,7 +19,7 @@ class Product(models.Model):
     rating = models.PositiveIntegerField(default=0,null=True,blank=True)
 
     def __str__(self):
-        return f"Name{self.name},Brand{self.brand},Price{self.price}"
+        return f"Name: {self.name},Brand: {self.brand},Price: {self.price}"
 
 
     def save(self, *args, **kwargs):
