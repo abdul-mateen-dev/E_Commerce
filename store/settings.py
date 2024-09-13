@@ -1,4 +1,3 @@
-""
 
 from pathlib import Path
 
@@ -18,6 +17,7 @@ SECRET_KEY = "django-insecure-oqs4d!ir1%tob_8vs%bb=8r^7z3*g7k#$gq$ye1!-_t3wt06va
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
 AUTH_USER_MODEL = "account.User"
 
 # Application definition
@@ -118,3 +118,8 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+AUTHENTICATION_BACKENDS = [
+      'account.backends.UserAuthBackend'
+]
