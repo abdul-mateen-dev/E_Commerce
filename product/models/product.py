@@ -16,7 +16,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     availability = models.CharField(max_length=255,null=True, blank=True)
-    rating = models.PositiveIntegerField(default=0,null=True,blank=True)
+    rating = models.FloatField(default=0,null=True,blank=True)
 
     def __str__(self):
         return f"Name: {self.name},Brand: {self.brand},Price: {self.price}"
@@ -27,3 +27,13 @@ class Product(models.Model):
             self.availability = "Sold Out"
         return super().save(*args, **kwargs)
 
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to="products/%Y/%m/%d/")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    def __str__(self):
+        return f"{self.product.name} - {self.image}"

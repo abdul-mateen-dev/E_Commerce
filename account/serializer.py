@@ -24,11 +24,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class LoginSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
+    username = serializers.CharField(required=True)
     password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = ["email","password"]
+        fields = ["password","username"]
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
     password = serializers.CharField(

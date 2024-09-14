@@ -23,4 +23,4 @@ class Rating(models.Model):
         unique_together = ('product', 'user')
 
     def __str__(self):
-        return f"Name: {self.product.name}Rating: {self.rating}"
+        return f"Name: {self.product.name}, Rating: {self.rating}"

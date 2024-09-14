@@ -1,23 +1,27 @@
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.tokens import RefreshToken,AccessToken
 
-from django.contrib.auth import authenticate
+
+
 from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import smart_str, force_bytes, DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from rest_framework.permissions import IsAuthenticated
 from django.conf import settings
 
 
+from.backends import UserAuthBackend as auth
 from account.serializer import *
 
-# def get_tokens_for_user(user):
-#     refresh = RefreshToken.for_user(user)
-#     access_token = AccessToken.for_user(user)
-#
-#     return {"access": str(access_token), "refresh": str(refresh)}
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    access_token = AccessToken.for_user(user)
+
+    return {"access": str(access_token), "refresh": str(refresh)}
 
 class UserRegister(APIView):
     serializer_class = UserSerializer
@@ -28,7 +32,12 @@ class UserRegister(APIView):
             user = serializer.save()
             user.set_password(password)
             user.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            token = get_tokens_for_user(user)
+            response_data = {
+                "message":"User Registered",
+                "token":token
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
 
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -39,12 +48,19 @@ class Login(APIView):
         serializer = self.serializer_class(data=request.data)
         if serializer.is_valid():
             password = serializer.validated_data['password']
-            email = serializer.validated_data['email']
-            user = authenticate(username=email,password=password)
+            username = serializer.validated_data['username']
+            print(username)
+
+            user = auth.authenticate(request,username=username,password=password)
+            print(user.name)
             if user is not None:
-                return Response("User is authenticated", status=status.HTTP_200_OK)
-            return Response("User is not authenticated", status=status.HTTP_401_UNAUTHORIZED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                token = get_tokens_for_user(user)
+                response_data = {
+                    "token": token
+                }
+                return Response(response_data, status=status.HTTP_201_CREATED)
+
+        return Response("User is not authenticated", status=status.HTTP_401_UNAUTHORIZED)
 
 
 
