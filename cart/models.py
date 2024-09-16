@@ -10,6 +10,7 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+    is_checked_out = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.name = self.product.name
@@ -19,5 +20,11 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"Name: {self.name} Price: {self.price} Quantity: {self.quantity} "
+
+
+    def delete(self, *args, **kwargs):
+        if self.is_checked_out:
+            self.delete()
+
 
 

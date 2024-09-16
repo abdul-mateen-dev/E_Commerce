@@ -19,9 +19,11 @@ class CategoryViewSet(ModelViewSet):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
+
 class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
 
     @action(detail=True, methods=['post'], url_path='upload-image')
     def upload_image(self, request, pk=None):
@@ -51,6 +53,10 @@ class ProductViewSet(ModelViewSet):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({"uploaded": successful_uploads}, status=status.HTTP_201_CREATED)
+
+
+
+
 
 
 class ProductSpecificationViewSet(ModelViewSet):

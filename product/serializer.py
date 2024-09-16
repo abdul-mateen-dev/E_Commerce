@@ -1,13 +1,12 @@
+from django.contrib.sites import requests
+from django.core.files import images
 from rest_framework import serializers
+
 
 from .models import Product, Category, Brand, ProductSpecification, Rating, ProductImage
 
 from rest_framework.validators import ValidationError
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = ['id','name','brand',"stock","price","description"]
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -38,15 +37,28 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = ["id","user","product","rating"]
         read_only_fields = ["user","product"]
 
+
 class ProductImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductImage
-        fields = ["image"]
+        fields = ["product","images"]
+        read_only_fields = ["product"]
 
-    def validate(self, data):
-        image = data['image']
-        max_size = 8 * 1024 * 1024  # 5 MB
-        if image.size > max_size:
-            raise ValidationError('File size too large. Maximum size allowed is 8MB.')
+    def validate_image(self, image):
+        if image:
+            max_size = 8 * 1024 * 1024  # 8MB
+            if image.size > max_size:
+                raise serializers.ValidationError('File size too large. Maximum size allowed is 8MB.')
+            return image
 
-        return data
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'brand', 'stock', 'price', 'description']
+
+
+
+
+
+

@@ -10,11 +10,15 @@ from product.models import Product, Rating, ProductImage, ProductSpecification
 from .serializer import ProductListSerializer
 from product.serializer import RatingSerializer
 
+from order.models import Order
+
+from cart.models import Cart
+from cart.serializers import CartSerializer
 
 class ProductDetailsView(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductListSerializer
-
+    http_method_names = ["get"]
         # authentication_classes = [JWTAuthentication]
         # permission_classes = [IsAuthenticated]
 
@@ -58,3 +62,20 @@ class ProductDetailsView(ModelViewSet):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['POST'])
+    def add_to_cart(self,request):
+        item = Product.objects.get(pk=self.kwargs['pk'])
+        serializer = CartSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(product=item)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+    @action(detail=True, methods=['POST'],url_path="check-out")
+    def check_out_cart(self,request):
+        items = Cart.objects.filter(user=request.user,is_checked_out=False)
+
+
