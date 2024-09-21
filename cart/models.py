@@ -10,11 +10,11 @@ class Cart(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    is_checked_out = models.BooleanField(default=False)
+    is_ordered = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         self.name = self.product.name
-        self.price = self.quantity * self.price
+        self.price = self.quantity * self.product.price
         return super().save(*args, **kwargs)
 
 
@@ -23,7 +23,7 @@ class Cart(models.Model):
 
 
     def delete(self, *args, **kwargs):
-        if self.is_checked_out:
+        if self.is_ordered:
             self.delete()
 
 

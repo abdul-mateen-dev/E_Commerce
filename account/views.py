@@ -49,10 +49,8 @@ class Login(APIView):
         if serializer.is_valid():
             password = serializer.validated_data['password']
             username = serializer.validated_data['username']
-            print(username)
 
             user = auth.authenticate(request,username=username,password=password)
-            print(user.name)
             if user is not None:
                 token = get_tokens_for_user(user)
                 response_data = {

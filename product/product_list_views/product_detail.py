@@ -68,14 +68,10 @@ class ProductDetailsView(ModelViewSet):
         item = Product.objects.get(pk=self.kwargs['pk'])
         serializer = CartSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(product=item)
+            serializer.save(product=item,user=request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-    @action(detail=True, methods=['POST'],url_path="check-out")
-    def check_out_cart(self,request):
-        items = Cart.objects.filter(user=request.user,is_checked_out=False)
 
 
